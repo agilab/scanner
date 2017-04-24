@@ -221,8 +221,8 @@ bool file_exists(const std::string& path) {
   return stat(path.c_str(), &buffer) == 0;
 }
 
-CaffeKernel::CaffeKernel(const Kernel::Config& config)
-  : VideoKernel(config), device_(config.devices[0]) {
+CaffeKernel::CaffeKernel(const KernelConfig& config)
+  : BatchedKernel(config), device_(config.devices[0]) {
   valid_.set_success(true);
 
   if (!args_.ParseFromArray(config.args.data(), config.args.size())) {
@@ -230,7 +230,6 @@ CaffeKernel::CaffeKernel(const Kernel::Config& config)
     return;
   }
 
-  cudaSetDevice(0);
   set_device();
   // Initialize our network
   auto& descriptor = args_.net_descriptor();
